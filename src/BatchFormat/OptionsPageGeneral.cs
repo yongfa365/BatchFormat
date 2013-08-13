@@ -20,7 +20,7 @@ namespace YongFa365.BatchFormat
     [ComVisible(true)]
     public class OptionsPageGeneral : DialogPage
     {
-        [Description("Set EndsWith Array. \r\nDelete All will default.")]
+        [Description("Set EndsWith Array. \r\nIf Empty will use the default values.")]
         public string[] EndsWith { get; set; }
 
         protected override void OnActivate(CancelEventArgs e)
