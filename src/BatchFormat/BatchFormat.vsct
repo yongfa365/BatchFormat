@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+
+  <Commands package="guidBatchFormatPkg">
+    <Menus>
+      <Menu guid="guidBatchFormatCmdSet" id="SlnSubMemu"  type="Menu">
+        <Parent guid="guidBatchFormatCmdSet" id="SlnMenuGroup" />
+        <Strings>
+          <ButtonText>BatchFormat</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
+      </Group>
+      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
+      </Group>
+      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE"/>
+      </Group>
+      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+      </Group>
+      <Group guid="guidBatchFormatCmdSet" id="SlnSubMemuGroup">
+        <Parent guid="guidBatchFormatCmdSet" id="SlnSubMemu"/>
+      </Group>
+
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidBatchFormatCmdSet" id="cmdidRemoveUnusedUsings" priority="0x001" type="Button">
+        <Parent guid="guidBatchFormatCmdSet" id="SlnSubMemuGroup"/>
+        <Icon guid="guidImages" id="bmpDelete" />
+        <Strings>
+          <ButtonText>Remove Unused Usings</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidBatchFormatCmdSet" id="cmdidSortUsings" priority="0x002" type="Button">
+        <Parent guid="guidBatchFormatCmdSet" id="SlnSubMemuGroup"/>
+        <Icon guid="guidImages" id="bmpSort" />
+        <Strings>
+          <ButtonText>Sort Usings</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidBatchFormatCmdSet" id="cmdidRemoveAndSortUsings" priority="0x003" type="Button">
+        <Parent guid="guidBatchFormatCmdSet" id="SlnSubMemuGroup"/>
+        <Icon guid="guidImages" id="bmpDeleteSort" />
+        <Strings>
+          <ButtonText>Remove And Sort Usings</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidBatchFormatCmdSet" id="cmdidFormatDocument" priority="0x004" type="Button">
+        <Parent guid="guidBatchFormatCmdSet"  id="SlnSubMemuGroup"  />
+        <Icon guid="guidImages" id="bmpFormat" />
+        <Strings>
+          <ButtonText>Format Document</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidBatchFormatCmdSet" id="cmdidSortUsingsAndFormatDocument" priority="0x005" type="Button">
+        <Parent guid="guidBatchFormatCmdSet" id="SlnSubMemuGroup"/>
+        <Icon guid="guidImages" id="bmpRecommend" />
+        <Strings>
+          <ButtonText>Sort Usings And Format Document</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidBatchFormatCmdSet" id="cmdidRemoveAndSortUsingsAndFormatDocument" priority="0x006" type="Button">
+        <Parent guid="guidBatchFormatCmdSet" id="SlnSubMemuGroup"/>
+        <Icon guid="guidImages" id="bmpAll" />
+        <Strings>
+          <ButtonText>Remove And Sort Usings And Format Document</ButtonText>
+        </Strings>
+      </Button>
+
+    </Buttons>
+
+    <Bitmaps>
+      <!--<Bitmap guid="guidRecommend" href="Resources\Recommend.png" usedList="bmpRecommend"/>
+      <Bitmap guid="guidSort" href="Resources\Sort.png" usedList="bmpSort"/>
+      <Bitmap guid="guidFormat" href="Resources\Format.png" usedList="bmpFormat"/>
+      <Bitmap guid="guidDelete" href="Resources\Delete.png" usedList="bmpDelete"/>-->
+      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpRecommend,bmpDelete,bmpSort,bmpDeleteSort,bmpFormat,bmpAll"/>
+
+    </Bitmaps>
+  </Commands>
+
+
+
+
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidBatchFormatPkg" value="{ca45914b-4959-408a-98cf-87e4f9e97815}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidBatchFormatCmdSet" value="{70fd9bbd-df20-4bc5-b51c-eaa35b408b7c}">
+      <!--Menus-->
+      <IDSymbol name="SlnSubMemu" value="0x0001" />
+      <IDSymbol name="ProjSubMemu" value="0x0002" />
+
+      <!--Groups-->
+      <IDSymbol name="SlnMenuGroup" value="0x1010" />
+      <IDSymbol name="SlnSubMemuGroup" value="0x1013" />
+
+      <IDSymbol name="ProjMenuGroup" value="0x1011" />
+      <IDSymbol name="ProjSubMenuGroup" value="0x1012" />
+
+
+      <IDSymbol name="cmdGroup" value="0x1014" />
+
+      <!--Commands-->
+      <IDSymbol name="cmdidRemoveUnusedUsings" value="0x2001" />
+      <IDSymbol name="cmdidSortUsings" value="0x2002" />
+      <IDSymbol name="cmdidRemoveAndSortUsings" value="0x2003" />
+      <IDSymbol name="cmdidFormatDocument" value="0x2004" />
+      <IDSymbol name="cmdidSortUsingsAndFormatDocument" value="0x2005" />
+      <IDSymbol name="cmdidRemoveAndSortUsingsAndFormatDocument" value="0x2006" />
+      <IDSymbol name="cmdidFormatDocument2" value="0x2007" />
+
+    </GuidSymbol>
+
+
+    <!--<GuidSymbol name="guidSort" value="{600B4379-48E1-4314-8E63-7B4DDFB777EB}">
+      <IDSymbol name="bmpSort" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidRecommend" value="{FEBAD06E-3D16-493C-983C-C2F74073F0B2}">
+      <IDSymbol name="bmpRecommend" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidFormat" value="{D0C81A92-C6A7-4137-852D-CAA1ACEDDCE0}">
+      <IDSymbol name="bmpFormat" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidDelete" value="{92973CF0-8037-4596-97FC-F56C4F9E6B1F}">
+      <IDSymbol name="bmpDelete" value="1" />
+    </GuidSymbol>-->
+    <GuidSymbol name="guidImages" value="{FEBAD06E-3D16-493C-983C-C2F74073F0B2}">
+      <IDSymbol name="bmpRecommend" value="1" />
+      <IDSymbol name="bmpDelete" value="2" />
+      <IDSymbol name="bmpSort" value="3" />
+      <IDSymbol name="bmpDeleteSort" value="4" />
+      <IDSymbol name="bmpFormat" value="5" />
+      <IDSymbol name="bmpAll" value="6" />
+    </GuidSymbol>
+
+  </Symbols>
+
+</CommandTable>
