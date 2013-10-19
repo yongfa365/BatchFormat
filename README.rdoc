@@ -1,5 +1,5 @@
 = Help
-Now this project can edit by "vs2010 with sp1" only ,vs2012 is can't, but i want !
+Now this project can edit by "vs2010 with sp1" only ,vs2012/2013 is can't, but i want !
 
 = Intro
 
@@ -9,7 +9,7 @@ Can batch format *.cs file on these *areas*: Solution, Project, Folder, File.
 
 *Function:* Remove, Sort, Using, Format Document, and more combinations.
 
-*Support:* vs2010 & vs2012
+*Support:* vs2010 & vs2012 & vs2013
 
 *screenshot:*
 
