@@ -3,7 +3,7 @@
   <Identifier Id="ca45914b-4959-408a-98cf-87e4f9e97815">
     <Name>BatchFormat</Name>
     <Author>www.yongfa365.com</Author>
-    <Version>1.7.0.0</Version>
+    <Version>1.8.0.0</Version>
     <Description xml:space="preserve">Code Batch Format Tool
 Areas: Solution, Project, Folder, File.
 Function: Remove, Sort, Using, Format Document, and more combinations.</Description>
@@ -15,18 +15,24 @@ Function: Remove, Sort, Using, Format Document, and more combinations.</Descript
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="10.0">
-        <Edition>Ultimate</Edition>
         <Edition>Premium</Edition>
         <Edition>Pro</Edition>
+        <Edition>Ultimate</Edition>
       </VisualStudio>
       <VisualStudio Version="11.0">
-        <Edition>Ultimate</Edition>
         <Edition>Premium</Edition>
         <Edition>Pro</Edition>
+        <Edition>Ultimate</Edition>
       </VisualStudio>
       <VisualStudio Version="12.0">
-        <Edition>Ultimate</Edition>
+        <Edition>Community</Edition>
         <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+        <Edition>Ultimate</Edition>
+      </VisualStudio>
+      <VisualStudio Version="14.0">
+        <Edition>Community</Edition>
+        <Edition>Enterprise</Edition>
         <Edition>Pro</Edition>
       </VisualStudio>
     </SupportedProducts>

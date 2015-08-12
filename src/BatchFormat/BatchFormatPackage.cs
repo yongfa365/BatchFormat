@@ -8,55 +8,53 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 
-
 namespace YongFa365.BatchFormat
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [ProvideOptionPageAttribute(typeof(OptionPage), "BatchFormat", "General", 101, 106, true)]
+    [ProvideOptionPage(typeof(OptionPage), "BatchFormat", "General", 101, 106, true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.GuidBatchFormatPkgString)]
     public sealed class BatchFormatPackage : Package
     {
-        private DTE2 dte = null;
-        private PkgCmdIDList selectedMenu = PkgCmdIDList.Null;
-        private List<string> lstAlreadyOpenFiles = new List<string>();
-        private List<string> lstExcludeEndsWith = null;
-        private OutputWindowPane myOutPane = null;
-        private int count;
+        private DTE2 _dte;
+        private PkgCmdIdList _selectedMenu = PkgCmdIdList.Null;
+        private List<string> _lstAlreadyOpenFiles = new List<string>();
+        private List<string> _lstExcludeEndsWith;
+        private OutputWindowPane _myOutPane;
+        private int _count;
 
         protected override void Initialize()
         {
             base.Initialize();
-            dte = (DTE2)base.GetService(typeof(DTE));
-            myOutPane = dte.ToolWindows.OutputWindow.OutputWindowPanes.Add("BatchFormat");
+            _dte = (DTE2)GetService(typeof(DTE));
+            _myOutPane = _dte.ToolWindows.OutputWindow.OutputWindowPanes.Add("BatchFormat");
 
             var mcs = GetService(typeof(IMenuCommandService)) as MenuCommandService;
-            if (null != mcs)
+
+            if (null == mcs) return;
+
+            foreach (int item in Enum.GetValues(typeof(PkgCmdIdList)))
             {
-                foreach (int item in Enum.GetValues(typeof(PkgCmdIDList)))
-                {
-                    var menuCommandID = new CommandID(GuidList.GuidBatchFormatCmdSet, item);
-                    var menuItem = new MenuCommand(Excute, menuCommandID);
-                    mcs.AddCommand(menuItem);
-                }
+                var menuCommandId = new CommandID(GuidList.GuidBatchFormatCmdSet, item);
+                var menuItem = new MenuCommand(Excute, menuCommandId);
+                mcs.AddCommand(menuItem);
             }
         }
 
-
         private void Excute(object sender, EventArgs e)
         {
-            lstExcludeEndsWith = dte.GetValue("ExcludeEndsWith");
-            count = 0;
+            _lstExcludeEndsWith = _dte.GetValue("ExcludeEndsWith");
+            _count = 0;
 
-            selectedMenu = (PkgCmdIDList)((MenuCommand)sender).CommandID.ID;
+            _selectedMenu = (PkgCmdIdList)((MenuCommand)sender).CommandID.ID;
 
             var table = new RunningDocumentTable(this);
-            lstAlreadyOpenFiles = (from info in table select info.Moniker).ToList<string>();
+            _lstAlreadyOpenFiles = (from info in table select info.Moniker).ToList();
 
-            var selectedItem = dte.SelectedItems.Item(1);
-            WriteLog("\r\n====================================================================================");
-            WriteLog("Start ：" + DateTime.Now.ToString());
+            var selectedItem = _dte.SelectedItems.Item(1);
+            WriteLog($"{Environment.NewLine}====================================================================================");
+            WriteLog($"Start: {DateTime.Now}");
 
             Stopwatch sp = new Stopwatch();
             sp.Start();
@@ -83,22 +81,21 @@ namespace YongFa365.BatchFormat
             }
             sp.Stop();
 
-            WriteLog(string.Format("Finish：{0}  Times：{1}s  Files：{2}", DateTime.Now.ToString(), sp.ElapsedMilliseconds / 1000, count - 2));
-            dte.ExecuteCommand("View.Output");
-            myOutPane.Activate();
+            WriteLog($"Finish: {DateTime.Now}  Times: {sp.ElapsedMilliseconds / 1000}s  Files: {_count - 2}");
+            _dte.ExecuteCommand("View.Output");
+            _myOutPane.Activate();
 
         }
 
-
         private void ProcessSolution()
         {
-            if (dte.Solution != null)
+            if (_dte.Solution != null)
             {
-                var projects = (from prj in new ProjectIterator(dte.Solution)
+                var projects = (from prj in new ProjectIterator(_dte.Solution)
                                 where prj.Kind == GuidList.GuidCsharpProjectString //只处理C#项目
                                 select prj);
 
-                projects.ForEach(prj => ProcessProject(prj));
+                projects.ForEach(ProcessProject);
             }
         }
 
@@ -129,48 +126,50 @@ namespace YongFa365.BatchFormat
                     return;
                 }
 
-                WriteLog("Doing ：" + fileName);
+                WriteLog($"Doing: {fileName}");
 
-                Window window = dte.OpenFile("{7651A703-06E5-11D1-8EBD-00A0C90F26EA}", fileName);
+                Window window = _dte.OpenFile("{7651A703-06E5-11D1-8EBD-00A0C90F26EA}", fileName);
                 window.Activate();
                 #region 执行命令
                 try
                 {
-                    switch (selectedMenu)
+                    switch (_selectedMenu)
                     {
-                        case PkgCmdIDList.cmdidRemoveUnusedUsings:
-                            dte.ExecuteCommand("Edit.RemoveUnusedUsings");
+                        case PkgCmdIdList.CmdidRemoveUnusedUsings:
+                            _dte.ExecuteCommand("Edit.RemoveUnusedUsings");
                             break;
-                        case PkgCmdIDList.cmdidSortUsings:
-                            dte.ExecuteCommand("Edit.SortUsings");
+                        case PkgCmdIdList.CmdidSortUsings:
+                            _dte.ExecuteCommand("Edit.SortUsings");
                             break;
-                        case PkgCmdIDList.cmdidRemoveAndSortUsings:
-                            dte.ExecuteCommand("Edit.RemoveAndSort");
+                        case PkgCmdIdList.CmdidRemoveAndSortUsings:
+                            _dte.ExecuteCommand("Edit.RemoveAndSort");
                             break;
-                        case PkgCmdIDList.cmdidFormatDocument:
-                            dte.ExecuteCommand("Edit.FormatDocument");
+                        case PkgCmdIdList.CmdidFormatDocument:
+                            _dte.ExecuteCommand("Edit.FormatDocument");
                             break;
-                        case PkgCmdIDList.cmdidSortUsingsAndFormatDocument:
-                            dte.ExecuteCommand("Edit.SortUsings");
-                            dte.ExecuteCommand("Edit.FormatDocument");
+                        case PkgCmdIdList.CmdidSortUsingsAndFormatDocument:
+                            _dte.ExecuteCommand("Edit.SortUsings");
+                            _dte.ExecuteCommand("Edit.FormatDocument");
                             break;
-                        case PkgCmdIDList.cmdidRemoveAndSortUsingsAndFormatDocument:
-                            dte.ExecuteCommand("Edit.RemoveAndSort");
-                            dte.ExecuteCommand("Edit.FormatDocument");
+                        case PkgCmdIdList.CmdidRemoveAndSortUsingsAndFormatDocument:
+                            _dte.ExecuteCommand("Edit.RemoveAndSort");
+                            _dte.ExecuteCommand("Edit.FormatDocument");
+                            break;
+                        case PkgCmdIdList.Null:
                             break;
                         default:
-                            break;
+                            throw new ArgumentOutOfRangeException();
                     }
-
                 }
                 catch (COMException)
                 {
                 }
+
                 #endregion
 
-                if (lstAlreadyOpenFiles.Exists(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                if (_lstAlreadyOpenFiles.Exists(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    dte.ActiveDocument.Save(fileName);
+                    _dte.ActiveDocument.Save(fileName);
                 }
                 else
                 {
@@ -188,23 +187,14 @@ namespace YongFa365.BatchFormat
 
             var input = projectItem.FileNames[0];
 
-            foreach (var item in lstExcludeEndsWith)
-            {
-                if (input.EndsWith(item, true, null))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return _lstExcludeEndsWith.Any(item => input.EndsWith(item, true, null));
         }
-
 
         private void WriteLog(string log)
         {
-            dte.StatusBar.Text = "BatchFormat " + log;
-            myOutPane.OutputString(log + "\r\n");
-            count++;
+            _dte.StatusBar.Text = $"BatchFormat {log}";
+            _myOutPane.OutputString($"{log}{Environment.NewLine}");
+            _count++;
         }
-
     }
 }
