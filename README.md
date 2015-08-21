@@ -8,11 +8,11 @@ It can batch format `*.cs` file on these **areas**: Solution, Project, Folder, F
 
 ## Function:
 
-Remove, sort, Using, Format Document, and more combinations.
+Remove, Sort, Using, Format Document, and more combinations.
 
 ## Support:
 
-Visual Studio 2010, 2012 & 2013.
+Visual Studio 2010, 2012, 2013, 2015.
 
 ## Building from Source:
 
