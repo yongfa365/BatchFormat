@@ -10,29 +10,20 @@ namespace YongFa365.BatchFormat
     public static class ConfigHelper
     {
 
-        public static List<string> ExcludeEndsWithList = new List<string> { "AssemblyInfo.cs", ".designer.cs", "Reference.cs" };
+        public static readonly List<string> ExcludeEndsWithList = new List<string> { "AssemblyInfo.cs", ".designer.cs", "Reference.cs" };
 
         public static List<string> GetValue(this DTE2 input, string key)
         {
             var temp = input.Properties["BatchFormat", "General"].Item(key).Value;
-            if (temp == null || string.IsNullOrWhiteSpace(temp.ToString()))
+            if (string.IsNullOrWhiteSpace(temp?.ToString()))
             {
                 return ExcludeEndsWithList;
             }
-            else
-            {
-                return temp.ToString().Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            }
+            return temp.ToString().Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
     }
 
-
-
-
-
-
-
-    public static class IEnumerableExtensions
+    public static class EnumerableExtensions
     {
         public static void ForEach<TItem>(this IEnumerable<TItem> source, Action<TItem> action)
         {
@@ -43,10 +34,9 @@ namespace YongFa365.BatchFormat
         }
     }
 
-
     public sealed class ProjectIterator : IEnumerable<Project>
     {
-        private Solution solution;
+        private readonly Solution _solution;
 
         public ProjectIterator(Solution solution)
         {
@@ -54,7 +44,7 @@ namespace YongFa365.BatchFormat
             {
                 throw new ArgumentNullException("solution");
             }
-            this.solution = solution;
+            _solution = solution;
         }
 
         private IEnumerable<Project> Enumerate(Project project)
@@ -63,15 +53,17 @@ namespace YongFa365.BatchFormat
             while (enumerator.MoveNext())
             {
                 ProjectItem current = (ProjectItem)enumerator.Current;
-                if (current.Object is Project)
+                Project currentObject = current.Object as Project;
+
+                if (currentObject != null)
                 {
-                    if (((Project)current.Object).Kind != "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}")
+                    if (currentObject.Kind != "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}")
                     {
-                        yield return (Project)current.Object;
+                        yield return currentObject;
                     }
                     else
                     {
-                        foreach (Project iteratorVariable1 in this.Enumerate((Project)current.Object))
+                        foreach (Project iteratorVariable1 in Enumerate(currentObject))
                         {
                             yield return iteratorVariable1;
                         }
@@ -82,7 +74,7 @@ namespace YongFa365.BatchFormat
 
         public IEnumerator<Project> GetEnumerator()
         {
-            IEnumerator enumerator = this.solution.Projects.GetEnumerator();
+            IEnumerator enumerator = _solution.Projects.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 Project current = (Project)enumerator.Current;
@@ -92,7 +84,7 @@ namespace YongFa365.BatchFormat
                 }
                 else
                 {
-                    foreach (Project iteratorVariable1 in this.Enumerate(current))
+                    foreach (Project iteratorVariable1 in Enumerate(current))
                     {
                         yield return iteratorVariable1;
                     }
@@ -102,16 +94,15 @@ namespace YongFa365.BatchFormat
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
 
     }
 
-
-    public sealed class ProjectItemIterator : IEnumerable<ProjectItem>, IEnumerable
+    public sealed class ProjectItemIterator : IEnumerable<ProjectItem>
     {
-        private ProjectItems items;
+        private readonly ProjectItems _items;
 
         public ProjectItemIterator(ProjectItems items)
         {
@@ -119,7 +110,7 @@ namespace YongFa365.BatchFormat
             {
                 throw new ArgumentNullException("items");
             }
-            this.items = items;
+            _items = items;
         }
 
         private IEnumerable<ProjectItem> Enumerate(ProjectItems items)
@@ -129,7 +120,7 @@ namespace YongFa365.BatchFormat
             {
                 ProjectItem current = (ProjectItem)enumerator.Current;
                 yield return current;
-                foreach (ProjectItem iteratorVariable1 in this.Enumerate(current.ProjectItems))
+                foreach (ProjectItem iteratorVariable1 in Enumerate(current.ProjectItems))
                 {
                     yield return iteratorVariable1;
                 }
@@ -138,13 +129,14 @@ namespace YongFa365.BatchFormat
 
         public IEnumerator<ProjectItem> GetEnumerator()
         {
-            return this.Enumerate(this.items).Select<ProjectItem, ProjectItem>
-                (item => { return item; }).GetEnumerator();
+            return Enumerate(_items)
+                  .Select(item => item)
+                  .GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
 

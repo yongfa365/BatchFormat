@@ -1,13 +1,13 @@
 ﻿namespace YongFa365.BatchFormat
 {
-    enum PkgCmdIDList
+    enum PkgCmdIdList
     {
         Null,
-        cmdidRemoveUnusedUsings = 0x2001,
-        cmdidSortUsings = 0x2002,
-        cmdidRemoveAndSortUsings = 0x2003,
-        cmdidFormatDocument = 0x2004,
-        cmdidSortUsingsAndFormatDocument = 0x2005,
-        cmdidRemoveAndSortUsingsAndFormatDocument = 0x2006
+        CmdidRemoveUnusedUsings = 0x2001,
+        CmdidSortUsings = 0x2002,
+        CmdidRemoveAndSortUsings = 0x2003,
+        CmdidFormatDocument = 0x2004,
+        CmdidSortUsingsAndFormatDocument = 0x2005,
+        CmdidRemoveAndSortUsingsAndFormatDocument = 0x2006
     }
 }

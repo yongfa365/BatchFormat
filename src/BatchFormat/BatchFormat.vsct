@@ -3,12 +3,11 @@
 
   <Extern href="stdidcmd.h" />
   <Extern href="vsshlids.h"/>
-  <Extern href="msobtnid.h"/>
 
 
   <Commands package="guidBatchFormatPkg">
     <Menus>
-      <Menu guid="guidBatchFormatCmdSet" id="SlnSubMemu"  type="Menu">
+      <Menu guid="guidBatchFormatCmdSet" id="SlnSubMemu" priority="0x001" type="Menu">
         <Parent guid="guidBatchFormatCmdSet" id="SlnMenuGroup" />
         <Strings>
           <ButtonText>BatchFormat</ButtonText>
@@ -17,19 +16,19 @@
     </Menus>
 
     <Groups>
-      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+      <Group guid="guidBatchFormatCmdSet" priority="0x0001" id="SlnMenuGroup">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
       </Group>
-      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+      <Group guid="guidBatchFormatCmdSet" priority="0x0002" id="SlnMenuGroup">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
       </Group>
-      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+      <Group guid="guidBatchFormatCmdSet" priority="0x0003" id="SlnMenuGroup">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE"/>
       </Group>
-      <Group guid="guidBatchFormatCmdSet" id="SlnMenuGroup">
+      <Group guid="guidBatchFormatCmdSet" priority="0x0004" id="SlnMenuGroup">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
       </Group>
-      <Group guid="guidBatchFormatCmdSet" id="SlnSubMemuGroup">
+      <Group guid="guidBatchFormatCmdSet" priority="0x0005" id="SlnSubMemuGroup">
         <Parent guid="guidBatchFormatCmdSet" id="SlnSubMemu"/>
       </Group>
 
