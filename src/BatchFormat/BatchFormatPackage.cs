@@ -50,13 +50,13 @@ namespace YongFa365.BatchFormat
             _selectedMenu = (PkgCmdIdList)((MenuCommand)sender).CommandID.ID;
 
             var table = new RunningDocumentTable(this);
-            _lstAlreadyOpenFiles = (from info in table select info.Moniker).ToList();
+            _lstAlreadyOpenFiles = table.Select(p => p.Moniker).ToList();
 
             var selectedItem = _dte.SelectedItems.Item(1);
             WriteLog($"{Environment.NewLine}====================================================================================");
             WriteLog($"Start: {DateTime.Now}");
 
-            Stopwatch sp = new Stopwatch();
+            var sp = new Stopwatch();
             sp.Start();
 
             if (selectedItem.Project == null && selectedItem.ProjectItem == null)
@@ -111,7 +111,7 @@ namespace YongFa365.BatchFormat
         {
             if (projectItems != null)
             {
-                new ProjectItemIterator(projectItems).ForEach(item => ProcessProjectItem(item));
+                new ProjectItemIterator(projectItems).ForEach(ProcessProjectItem);
             }
         }
 
@@ -128,7 +128,7 @@ namespace YongFa365.BatchFormat
 
                 WriteLog($"Doing: {fileName}");
 
-                Window window = _dte.OpenFile("{7651A703-06E5-11D1-8EBD-00A0C90F26EA}", fileName);
+                var window = _dte.OpenFile("{7651A703-06E5-11D1-8EBD-00A0C90F26EA}", fileName);
                 window.Activate();
                 #region 执行命令
                 try
@@ -185,9 +185,9 @@ namespace YongFa365.BatchFormat
                 return true;
             }
 
-            var input = projectItem.FileNames[0];
+            var input = projectItem.FileNames[1];
 
-            return _lstExcludePath.Any(item => input.ToLower().Contains(item.ToLower()));
+            return _lstExcludePath.Any(p => input.ToLower().Contains(p.ToLower()));
         }
 
         private void WriteLog(string log)

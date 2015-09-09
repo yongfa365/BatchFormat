@@ -3,7 +3,7 @@
   <Identifier Id="ca45914b-4959-408a-98cf-87e4f9e97815">
     <Name>BatchFormat</Name>
     <Author>www.yongfa365.com</Author>
-    <Version>1.8.0.0</Version>
+    <Version>1.9.0.0</Version>
     <Description xml:space="preserve">Code Batch Format Tool
 Areas: Solution, Project, Folder, File.
 Function: Remove, Sort, Using, Format Document, and more combinations.</Description>

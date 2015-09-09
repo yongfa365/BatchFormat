@@ -19,22 +19,26 @@ namespace YongFa365.BatchFormat
     [ComVisible(true)]
     public class OptionPage : DialogPage
     {
-        private string excludePath;
+        private string _excludePath;
 
-        [Description("Exclude files when path contains eg: EndsWith AssemblyInfo.cs|.designer.cs|Reference.cs|/metadata/ \r\nsplit by \"|\" \r\n\r\nIf Empty will use the default values.")]
+        [Description(@"Exclude files when path contains
+eg: AssemblyInfo.cs|.designer.cs|Reference.cs|\metadata\
+split by '|' £¬IgnoreCase
+
+If Empty will use the default values.")]
         public string ExcludePath
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(excludePath))
+                if (string.IsNullOrWhiteSpace(_excludePath))
                 {
                     return string.Join("|", ConfigHelper.ExcludePathList);
                 }
-                return excludePath;
+                return _excludePath;
             }
             set
             {
-                excludePath = value;
+                _excludePath = value;
             }
         }
 
