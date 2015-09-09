@@ -20,7 +20,7 @@ namespace YongFa365.BatchFormat
         private DTE2 _dte;
         private PkgCmdIdList _selectedMenu = PkgCmdIdList.Null;
         private List<string> _lstAlreadyOpenFiles = new List<string>();
-        private List<string> _lstExcludeEndsWith;
+        private List<string> _lstExcludePath;
         private OutputWindowPane _myOutPane;
         private int _count;
 
@@ -44,7 +44,7 @@ namespace YongFa365.BatchFormat
 
         private void Excute(object sender, EventArgs e)
         {
-            _lstExcludeEndsWith = _dte.GetValue("ExcludePath");
+            _lstExcludePath = _dte.GetValue("ExcludePath");
             _count = 0;
 
             _selectedMenu = (PkgCmdIdList)((MenuCommand)sender).CommandID.ID;
@@ -187,7 +187,7 @@ namespace YongFa365.BatchFormat
 
             var input = projectItem.FileNames[0];
 
-            return _lstExcludeEndsWith.Any(item => input.EndsWith(item, true, null));
+            return _lstExcludePath.Any(item => input.ToLower().Contains(item.ToLower()));
         }
 
         private void WriteLog(string log)

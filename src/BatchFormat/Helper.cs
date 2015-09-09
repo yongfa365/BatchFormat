@@ -10,14 +10,14 @@ namespace YongFa365.BatchFormat
     public static class ConfigHelper
     {
 
-        public static readonly List<string> ExcludeEndsWithList = new List<string> { "AssemblyInfo.cs", ".designer.cs", "Reference.cs" };
+        public static readonly List<string> ExcludePathList = new List<string> { "AssemblyInfo.cs", ".designer.cs", "Reference.cs", "/metadata/" };
 
         public static List<string> GetValue(this DTE2 input, string key)
         {
             var temp = input.Properties["BatchFormat", "General"].Item(key).Value;
             if (string.IsNullOrWhiteSpace(temp?.ToString()))
             {
-                return ExcludeEndsWithList;
+                return ExcludePathList;
             }
             return temp.ToString().Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
