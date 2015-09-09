@@ -21,8 +21,8 @@ namespace YongFa365.BatchFormat
     {
         private string excludeEndsWith;
 
-        [Description("Exclude files eg: EndsWith AssemblyInfo.cs|.designer.cs|Reference.cs \r\nsplit by \"|\" \r\n\r\nIf Empty will use the default values.")]
-        public string ExcludeEndsWith
+        [Description("Exclude files when path contains eg: EndsWith AssemblyInfo.cs|.designer.cs|Reference.cs|/metadata/ \r\nsplit by \"|\" \r\n\r\nIf Empty will use the default values.")]
+        public string ExcludePath
         {
             get
             {

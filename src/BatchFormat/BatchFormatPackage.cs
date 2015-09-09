@@ -44,7 +44,7 @@ namespace YongFa365.BatchFormat
 
         private void Excute(object sender, EventArgs e)
         {
-            _lstExcludeEndsWith = _dte.GetValue("ExcludeEndsWith");
+            _lstExcludeEndsWith = _dte.GetValue("ExcludePath");
             _count = 0;
 
             _selectedMenu = (PkgCmdIdList)((MenuCommand)sender).CommandID.ID;
