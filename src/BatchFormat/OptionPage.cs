@@ -1,14 +1,4 @@
-/***************************************************************************
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-This code is licensed under the Visual Studio SDK license terms.
-THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-
-***************************************************************************/
-
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
@@ -21,9 +11,8 @@ namespace YongFa365.BatchFormat
     {
         private string _excludePath;
 
-        [Description(@"Exclude files when path contains
-eg: AssemblyInfo.cs|.designer.cs|Reference.cs|\metadata\
-split by '|' £¬IgnoreCase
+        [Description(@"Default:AssemblyInfo.cs|.designer.cs|Reference.cs|\MetaData\
+mean:Exclude files when path contains these,split by '|',IgnoreCase
 
 If Empty will use the default values.")]
         public string ExcludePath
@@ -41,6 +30,10 @@ If Empty will use the default values.")]
                 _excludePath = value;
             }
         }
+
+        [Description(@"Default:true Mean£º
+if <Current>.cs is gen by *.tt,then Ignore")]
+        public bool IgnoreT4Child { get; set; } = true;
 
     }
 }

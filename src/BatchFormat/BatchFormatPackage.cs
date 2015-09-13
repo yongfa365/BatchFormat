@@ -44,7 +44,8 @@ namespace YongFa365.BatchFormat
 
         private void Excute(object sender, EventArgs e)
         {
-            _lstExcludePath = _dte.GetValue("ExcludePath");
+            _myOutPane.Activate();
+            _lstExcludePath = _dte.GetExcludePathList();
             _count = 0;
 
             _selectedMenu = (PkgCmdIdList)((MenuCommand)sender).CommandID.ID;
@@ -53,35 +54,38 @@ namespace YongFa365.BatchFormat
             _lstAlreadyOpenFiles = table.Select(p => p.Moniker).ToList();
 
             var selectedItem = _dte.SelectedItems.Item(1);
+
             WriteLog($"{Environment.NewLine}====================================================================================");
             WriteLog($"Start: {DateTime.Now}");
 
+           
             var sp = new Stopwatch();
             sp.Start();
 
-            if (selectedItem.Project == null && selectedItem.ProjectItem == null)
+            //以下判断只会进一次
+            if (selectedItem.Project == null && selectedItem.ProjectItem == null) //从解决方案一级进来的
             {
                 ProcessSolution();
             }
-            else if (selectedItem.Project != null)
+            else if (selectedItem.Project != null) //从项目一级进来的
             {
                 ProcessProject(selectedItem.Project);
             }
-            else if (selectedItem.ProjectItem != null)
+            else if (selectedItem.ProjectItem != null) //从文件夹一级或者文件一级进来的
             {
-                if (selectedItem.ProjectItem.ProjectItems.Count > 0)
+                if (selectedItem.ProjectItem.ProjectItems.Count > 0) //此项下页还有文件，如：文件夹，T4模板
                 {
                     ProcessProjectItem(selectedItem.ProjectItem);
-                    ProcessProjectItems(selectedItem.ProjectItem.ProjectItems);
+                    ProcessProjectItems(selectedItem.ProjectItem.ProjectItems, selectedItem.ProjectItem.Name);
                 }
-                else
+                else //此项下什么都没有了，直接处理
                 {
                     ProcessProjectItem(selectedItem.ProjectItem);
                 }
             }
             sp.Stop();
 
-            WriteLog($"Finish: {DateTime.Now}  Times: {sp.ElapsedMilliseconds / 1000}s  Files: {_count - 2}");
+            WriteLog($"Finish: {DateTime.Now}  Files: {_count - 2}  Elapsed: {sp.ElapsedMilliseconds / 1000}s");
             _dte.ExecuteCommand("View.Output");
             _myOutPane.Activate();
 
@@ -107,21 +111,27 @@ namespace YongFa365.BatchFormat
             }
         }
 
-        private void ProcessProjectItems(ProjectItems projectItems)
+        private void ProcessProjectItems(ProjectItems projectItems, string parentFileName = null)
         {
             if (projectItems != null)
             {
-                new ProjectItemIterator(projectItems).ForEach(ProcessProjectItem);
+                new ProjectItemIterator(projectItems).ForEach(item => ProcessProjectItem(item, parentFileName));
             }
         }
 
-        private void ProcessProjectItem(ProjectItem projectItem)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectItem"></param>
+        /// <param name="parentFileName"> //TODO:because can't get projectItem.Parent,so give it</param>
+        private void ProcessProjectItem(ProjectItem projectItem, string parentFileName = null)
         {
+            _myOutPane.Activate();
             string fileName;
             if (projectItem != null)
             {
                 fileName = projectItem.FileNames[1];
-                if (IsNotNeedProcess(projectItem))
+                if (IsNotNeedProcess(projectItem, parentFileName))
                 {
                     return;
                 }
@@ -178,11 +188,19 @@ namespace YongFa365.BatchFormat
             }
         }
 
-        private bool IsNotNeedProcess(ProjectItem projectItem)
+
+        private bool IsNotNeedProcess(ProjectItem projectItem, string parentFileName)
         {
             if (projectItem.FileCodeModel == null)
             {
                 return true;
+            }
+            if (parentFileName != null)
+            {
+                if (_dte.IsIgnoreT4Child() && parentFileName.ToLower().EndsWith(".tt"))
+                {
+                    return true;
+                }
             }
 
             var input = projectItem.FileNames[1];

@@ -12,14 +12,25 @@ namespace YongFa365.BatchFormat
 
         public static List<string> ExcludePathList { get; } = new List<string> { "AssemblyInfo.cs", ".designer.cs", "Reference.cs", @"\MetaData\" };
 
-        public static List<string> GetValue(this DTE2 input, string key)
+        public static List<string> GetExcludePathList(this DTE2 input)
         {
-            var temp = input.Properties["BatchFormat", "General"].Item(key).Value;
+            var temp = input.Properties["BatchFormat", "General"].Item("ExcludePath").Value;
             if (string.IsNullOrWhiteSpace(temp?.ToString()))
             {
                 return ExcludePathList;
             }
-            return temp.ToString().Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var result = temp.ToString().Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            return result;
+        }
+
+        public static bool IsIgnoreT4Child(this DTE2 input)
+        {
+            var temp = input.Properties["BatchFormat", "General"].Item("IgnoreT4Child").Value;
+            if (string.IsNullOrWhiteSpace(temp?.ToString()))
+            {
+                return true;
+            }
+            return (bool)temp;
         }
     }
 
