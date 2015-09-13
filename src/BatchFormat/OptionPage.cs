@@ -31,7 +31,7 @@ If Empty will use the default values.")]
             }
         }
 
-        [Description(@"Default:true Mean£º
+        [Description(@"Default:true Mean:
 if <Current>.cs is gen by *.tt,then Ignore")]
         public bool IgnoreT4Child { get; set; } = true;
 
