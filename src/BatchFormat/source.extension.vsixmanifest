@@ -8,7 +8,7 @@
 Areas: Solution, Project, Folder, File.
 Function: Remove, Sort, Using, Format Document, and more combinations.</Description>
     <Locale>1033</Locale>
-    <MoreInfoUrl>http://www.yongfa365.com/</MoreInfoUrl>
+    <MoreInfoUrl>https://github.com/yongfa365/BatchFormat</MoreInfoUrl>
     <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/a7f75c34-82b4-4357-9c66-c18e32b9393e</GettingStartedGuide>
     <Icon>Resources/Icon.png</Icon>
     <PreviewImage>Resources/Preview.png</PreviewImage>
