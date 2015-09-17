@@ -30,4 +30,15 @@ Install-Package Microsoft.Net.Compilers
 
 ![Preview 1](http://i1.visualstudiogallery.msdn.s-msft.com/a7f75c34-82b4-4357-9c66-c18e32b9393e/image/file/52181/1/preview.png)
 
-![Preview 2](http://i1.visualstudiogallery.msdn.s-msft.com/a7f75c34-82b4-4357-9c66-c18e32b9393e/image/file/52275/1/option.png)
+![Preview 2](https://i1.visualstudiogallery.msdn.s-msft.com/a7f75c34-82b4-4357-9c66-c18e32b9393e/image/file/179382/1/batchformat.option.png)
+
+## src debug：
+ http://stackoverflow.com/questions/24653486/how-to-debug-a-vsix-project
+
+- Open a Visual Studio instance for development. Load up the solution.
+- Make some changes, build.
+- Install the .vsix (double clicking the vsix file in \bin\debug)
+- Launch a new Instance of Visual Studio for testing.
+- In the Dev Visual Studio, Debug -> Attach to Process and select devenv.exe
+- In the Dev Visual Studio, set some break points.
+- In the Test Visual Studio, create / open new solution and start test coding.
