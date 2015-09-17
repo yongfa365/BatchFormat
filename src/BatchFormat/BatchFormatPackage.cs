@@ -58,7 +58,7 @@ namespace YongFa365.BatchFormat
             WriteLog($"{Environment.NewLine}====================================================================================");
             WriteLog($"Start: {DateTime.Now}");
 
-           
+
             var sp = new Stopwatch();
             sp.Start();
 
@@ -76,7 +76,7 @@ namespace YongFa365.BatchFormat
                 if (selectedItem.ProjectItem.ProjectItems.Count > 0) //此项下页还有文件，如：文件夹，T4模板
                 {
                     ProcessProjectItem(selectedItem.ProjectItem);
-                    ProcessProjectItems(selectedItem.ProjectItem.ProjectItems, selectedItem.ProjectItem.Name);
+                    ProcessProjectItems(selectedItem.ProjectItem.ProjectItems);
                 }
                 else //此项下什么都没有了，直接处理
                 {
@@ -111,11 +111,11 @@ namespace YongFa365.BatchFormat
             }
         }
 
-        private void ProcessProjectItems(ProjectItems projectItems, string parentFileName = null)
+        private void ProcessProjectItems(ProjectItems projectItems)
         {
             if (projectItems != null)
             {
-                new ProjectItemIterator(projectItems).ForEach(item => ProcessProjectItem(item, parentFileName));
+                new ProjectItemIterator(projectItems).ForEach(ProcessProjectItem);
             }
         }
 
@@ -123,78 +123,80 @@ namespace YongFa365.BatchFormat
         /// 
         /// </summary>
         /// <param name="projectItem"></param>
-        /// <param name="parentFileName"> //TODO:because can't get projectItem.Parent,so give it</param>
-        private void ProcessProjectItem(ProjectItem projectItem, string parentFileName = null)
+        private void ProcessProjectItem(ProjectItem projectItem)
         {
-            _myOutPane.Activate();
-            string fileName;
-            if (projectItem != null)
+            if (projectItem == null)
             {
-                fileName = projectItem.FileNames[1];
-                if (IsNotNeedProcess(projectItem, parentFileName))
-                {
-                    return;
-                }
+                return;
+            }
 
-                WriteLog($"Doing: {fileName}");
+            if (IsNotNeedProcess(projectItem))
+            {
+                return;
+            }
 
-                var window = _dte.OpenFile("{7651A703-06E5-11D1-8EBD-00A0C90F26EA}", fileName);
-                window.Activate();
-                #region 执行命令
-                try
-                {
-                    switch (_selectedMenu)
-                    {
-                        case PkgCmdIdList.CmdidRemoveUnusedUsings:
-                            _dte.ExecuteCommand("Edit.RemoveUnusedUsings");
-                            break;
-                        case PkgCmdIdList.CmdidSortUsings:
-                            _dte.ExecuteCommand("Edit.SortUsings");
-                            break;
-                        case PkgCmdIdList.CmdidRemoveAndSortUsings:
-                            _dte.ExecuteCommand("Edit.RemoveAndSort");
-                            break;
-                        case PkgCmdIdList.CmdidFormatDocument:
-                            _dte.ExecuteCommand("Edit.FormatDocument");
-                            break;
-                        case PkgCmdIdList.CmdidSortUsingsAndFormatDocument:
-                            _dte.ExecuteCommand("Edit.SortUsings");
-                            _dte.ExecuteCommand("Edit.FormatDocument");
-                            break;
-                        case PkgCmdIdList.CmdidRemoveAndSortUsingsAndFormatDocument:
-                            _dte.ExecuteCommand("Edit.RemoveAndSort");
-                            _dte.ExecuteCommand("Edit.FormatDocument");
-                            break;
-                        case PkgCmdIdList.Null:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-                catch (COMException)
-                {
-                }
+            var fileName = projectItem.FileNames[1];
 
-                #endregion
+            WriteLog($"Doing: {fileName}");
 
-                if (_lstAlreadyOpenFiles.Exists(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+            var window = _dte.OpenFile("{7651A703-06E5-11D1-8EBD-00A0C90F26EA}", fileName);
+            window.Activate();
+            #region 执行命令
+            try
+            {
+                switch (_selectedMenu)
                 {
-                    _dte.ActiveDocument.Save(fileName);
+                    case PkgCmdIdList.CmdidRemoveUnusedUsings:
+                        _dte.ExecuteCommand("Edit.RemoveUnusedUsings");
+                        break;
+                    case PkgCmdIdList.CmdidSortUsings:
+                        _dte.ExecuteCommand("Edit.SortUsings");
+                        break;
+                    case PkgCmdIdList.CmdidRemoveAndSortUsings:
+                        _dte.ExecuteCommand("Edit.RemoveAndSort");
+                        break;
+                    case PkgCmdIdList.CmdidFormatDocument:
+                        _dte.ExecuteCommand("Edit.FormatDocument");
+                        break;
+                    case PkgCmdIdList.CmdidSortUsingsAndFormatDocument:
+                        _dte.ExecuteCommand("Edit.SortUsings");
+                        _dte.ExecuteCommand("Edit.FormatDocument");
+                        break;
+                    case PkgCmdIdList.CmdidRemoveAndSortUsingsAndFormatDocument:
+                        _dte.ExecuteCommand("Edit.RemoveAndSort");
+                        _dte.ExecuteCommand("Edit.FormatDocument");
+                        break;
+                    case PkgCmdIdList.Null:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                else
-                {
-                    window.Close(vsSaveChanges.vsSaveChangesYes);
-                }
+            }
+            catch (COMException)
+            {
+            }
+
+            #endregion
+
+            if (_lstAlreadyOpenFiles.Exists(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+            {
+                _dte.ActiveDocument.Save(fileName);
+            }
+            else
+            {
+                window.Close(vsSaveChanges.vsSaveChangesYes);
             }
         }
 
 
-        private bool IsNotNeedProcess(ProjectItem projectItem, string parentFileName)
+        private bool IsNotNeedProcess(ProjectItem projectItem)
         {
             if (projectItem.FileCodeModel == null)
             {
                 return true;
             }
+
+            var parentFileName = ((dynamic)projectItem.Collection.Parent).Name;
             if (parentFileName != null)
             {
                 if (_dte.IsIgnoreT4Child() && parentFileName.ToLower().EndsWith(".tt"))
